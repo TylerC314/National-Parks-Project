@@ -4,22 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>National Park</title>
+    <title>National Park Search</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <section class="input-container">
         <header>
             <h1>National Park Search</h1>
         </header>
+
         <form>
-            <input type="text" name="" id="park-name-input">
-            <br>
-            <input type="text" name="" id="max-result-input">
-            <br>
-            <input type="submit" value="Get Park">
+            <input type="text" id="park-location-input" placeholder="Enter park or state" required>
+            <input type="text" id="max-results-input" placeholder="10">
+            <input type="submit" value="Find a Park">
         </form>
-    </div>
+    </section>
+
+    <section class="park-display">
+        
+    </section>
 </body>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+  crossorigin="anonymous"></script>
 <script src="script.js"></script>
 </html>
