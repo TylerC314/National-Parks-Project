@@ -6,53 +6,77 @@ function formatParameters(parameters) {
     return queryItems.join("&");
 }
 
-function getParks(prkCode, maxResults = 10) {
-    let prkCodeArr = String(prkCode).replace(/,/g, " ").split(" ");
-    console.log("Array: ", prkCodeArr);
+function getParks(stateCode, maxResults = 10) {
+    let stateCodeArr = String(stateCode).replace(/,/g, " ").replace(/  /g, " ").split(" ");
+    console.log("Array: ", stateCodeArr);
     const parameters = {
-        stateCode: prkCode,
         api_key: apiKey,
         fields: "addresses",
         limit: maxResults,
         sort: "parkCode",
     }
 
-    const queryString = formatParameters(parameters);
-    const url = apiUrl + "?" + queryString;
+    let queryString = formatParameters(parameters);
+    stateCodeArr.forEach(state => {
+        queryString += `&stateCode=${state}`;
+    });
+    console.log("queryString", queryString);
+    const url = `${apiUrl}?${queryString}`;
 
     console.log(url);
 
+    let errMsg = "Something went Wrong!"
+
     fetch(url)
-        .then(response => response.json())
+        .then(response => {
+            if(response.ok) {
+                return response.json();
+            }
+            else {
+                throw new Error(response.statusText);
+            }
+        })
         .then(responseJson => {
+            if(responseJson.total == 0) {
+                errMsg = "Not a valid input try again"
+                return Promise.reject();
+            }
             displayResults(responseJson);
+        })
+        .catch(err => {
+            alert(errMsg)
         });
 }
 
 function displayResults(responseJson) {
-    responseJson.data.forEach((park, num) => {
+    responseJson.data.forEach(park => {
         let parkAddress = "";
         park.addresses.forEach(address => {
             if(address.type === "Physical") {
                 parkAddress = address;
             }
         });
-        console.log(park.url);
-        console.log(parkAddress);
         const parkData = `
-            <li>[${num + 1}] Name: ${park.fullName}</li>
-            <li>Description: ${park.description}</li>
-            <li>Website: ${park.url}</li>
-            <li><p>Address: ${parkAddress.city}, ${parkAddress.stateCode} ${parkAddress.postalCode}</p></li>
+            <ul class="park-list">
+                <li>Name:
+                <li>${park.fullName}</li>
+                <li>Description:</li>
+                <li>${park.description}</li>
+                <li>Website:</li>
+                <li>${park.url}</li>
+                <li>Address:<li>
+                <li>${parkAddress.line1} ${parkAddress.line2} ${parkAddress.line3}</li>
+                <li>${parkAddress.city}, ${parkAddress.stateCode} ${parkAddress.postalCode}</li>
+            <ul>
             `;
-        $(".park-list").append(parkData);
+        $(".parks-display").append(parkData);
     });
 }
 
 function parkSearchHandler(){
     $("form").submit(event => {
         event.preventDefault();
-        $(".park-list").html("");
+        $(".parks-display").html("");
         if($("#max-results-input").val().length > 0) {
             getParks($("#park-state-input").val(), $("#max-results-input").val());
         }
