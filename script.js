@@ -20,10 +20,7 @@ function getParks(stateCode, maxResults = 10) {
     stateCodeArr.forEach(state => {
         queryString += `&stateCode=${state}`;
     });
-    console.log("queryString", queryString);
     const url = `${apiUrl}?${queryString}`;
-
-    console.log(url);
 
     let errMsg = "Something went Wrong!"
 
