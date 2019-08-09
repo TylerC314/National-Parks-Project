@@ -12,7 +12,7 @@ body {
 }
 
 section {
-    width: 30%;
+    width: 50%;
 }
 
 form {
@@ -24,6 +24,10 @@ form {
 li {
     list-style: none;
     text-align: left;
+}
+
+.park-list {
+    border: 1px solid black;
 }
 
 #park-submit-button {
